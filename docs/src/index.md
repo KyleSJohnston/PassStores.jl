@@ -97,9 +97,11 @@ Order   = [:type, :module]
 
     Note that the example configuration in the unit tests are **only** intended for testing purposes.
 
-Approximate steps:
+If you do not already use `pass`, here are the basic steps to use PassStores.jl:
 1. Generate a new gpg key `gpg --full-generate-key`
 1. Show the id for the generated key `gpg --list-keys --keyid-format LONG`
 1. Initialize the password store `pass init <KEYID>`
 1. Insert a secret `pass insert <path-to-secret>`
 1. Retrieve the secret `pass show <path-to-secret>`
+
+Assuming you were able to retrieve the stored secret at the command line, you should be able to retrieve it with `store[<path-to-secret>]`.
