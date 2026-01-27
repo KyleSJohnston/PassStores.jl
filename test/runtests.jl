@@ -34,28 +34,7 @@ function create_gpgkey()
     run(pipeline(`gpg --batch --generate-key $config`, stdout=stdout_buffer, stderr=stderr_buffer))
     @debug "GPG key generation stdout: $(String(take!(stdout_buffer)))"
     @debug "GPG key generation stderr: $(String(take!(stderr_buffer)))"
-
-    output = IOBuffer(read(`gpg --list-secret-keys --keyid-format LONG`, String))
-    # Parse the output to find the key ID
-    key_id = extract_key_id(output)
-
-    return key_id
-end
-
-# Extracts the GPG key ID from gpg --list-secret-keys output
-# Parses the output to find the key ID in the ssb line
-function extract_key_id(gpg_output)
-    for line in eachline(gpg_output)
-        if startswith(line, "ssb")
-            parts = split(line)
-            for part in parts
-                if occursin('/', part)
-                    return split(part, '/')[2]
-                end
-            end
-        end
-    end
-    error("No key id!")
+    return "test@example.com"  # email used in gpgconfig.txt
 end
 
 # Test utility function to initialize a pass store in the given directory
