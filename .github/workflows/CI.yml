@@ -29,8 +29,8 @@ jobs:
         version:
           - 'lts'
           - '1.12'
+          - '1.12-nightly'
           # - 'pre'
-          # - 'nightly'
         os:
           - ubuntu-latest
         arch:
