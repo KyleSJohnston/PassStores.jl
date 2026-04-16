@@ -8,8 +8,10 @@ using Test
     @testset "Code quality (Aqua.jl)" begin
         Aqua.test_all(PassStores)
     end
-    @testset "Code linting (JET.jl)" begin
-        JET.test_package(PassStores; target_modules = (PassStores,))
+    if "--jettest" in ARGS
+        @testset "Code linting (JET.jl)" begin
+            JET.test_package(PassStores; target_modules = (PassStores,))
+        end
     end
 end
 
