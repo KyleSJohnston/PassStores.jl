@@ -23,7 +23,7 @@ jobs:
       - uses: julia-actions/setup-julia@f6f565d9f7cf12f53dc8045742460d6260ad3b39  # v3.0.1
         with:
           version: '1'
-      - uses: julia-actions/cache@a45e8fa8be21c18a06b7177052533149e61e9b38  # v3.0.3
+      - uses: julia-actions/cache@a45e8fa8be21c18a06b7177052533149e61e9b38  # v3.1.0
       - name: Install dependencies
         shell: julia --color=yes --project=docs {0}
         run: |
