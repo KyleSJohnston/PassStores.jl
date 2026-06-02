@@ -4,6 +4,24 @@ using Logging
 
 export PassStore
 
+# Validates that the pass command is available and working
+function validate_pass_command()
+    try
+        run(pipeline(`pass --version`, stdout=devnull, stderr=devnull))
+    catch e
+        if e isa ProcessFailedException || e isa Base.IOError
+            throw(SystemError("pass command not found or not working. Please install pass."))
+        else
+            rethrow(e)
+        end
+    end
+end
+
+# Returns the default password store directory path
+function default_store_directory()
+    return joinpath(homedir(), ".password-store")
+end
+
 """
     PassStore(dir=nothing)
 
@@ -31,52 +49,36 @@ password = store["service/password"]
 struct PassStore
     dir::Union{String,Nothing}
 
-    function PassStore(dir=nothing)
+    function PassStore(dir::String)
         # Validate pass command exists and works
         validate_pass_command()
 
         # Resolve store directory
-        resolved_dir = resolve_store_directory(dir)
-        validate_store_directory(resolved_dir)
+        validate_store_directory(dir)
 
-        @debug "Using password store directory: $resolved_dir"
+        @debug "Using password store directory: $dir"
 
-        return new(resolved_dir)
+        return new(dir)
     end
 end
 
+# coerce `dir` to be a String
+PassStore(dir::AbstractString) = PassStore(String(dir))
 
-# Validates that the pass command is available and working
-function validate_pass_command()
-    try
-        run(pipeline(`pass --version`, stdout=devnull, stderr=devnull))
-    catch e
-        if e isa ProcessFailedException || e isa Base.IOError
-            throw(SystemError("pass command not found or not working. Please install pass."))
-        else
-            rethrow(e)
-        end
-    end
-end
+# use the default location
+PassStore(::Nothing) = PassStore(default_store_directory())
 
-# Returns the default password store directory path
-function default_store_directory()
-    return joinpath(homedir(), ".password-store")
-end
+# default to `nothing`
+PassStore() = PassStore(nothing)
 
-# Resolves the password store directory based on input parameter
-# Returns the directory path to use for the password store
-function resolve_store_directory(dir)
-    if dir isa AbstractString
-        # Explicit directory provided
-        return String(dir)
-    elseif isnothing(dir)
-        # Explicitly ignore environment variable, use default
-        return default_store_directory()
-    else
-        # Use environment variable if set, otherwise default
-        return get(ENV, "PASSWORD_STORE_DIR", default_store_directory())
-    end
+# use the environment variable if set, otherwise default
+PassStore(env::Base.EnvDict) = PassStore(get(env, "PASSWORD_STORE_DIR", nothing))
+
+# DEPRECATED
+# This method preserves the behavior of `resolve_store_directory`.
+function PassStore(dir::Any)
+    @warn "This method of constructing `PassStore` is deprecated. Call `PassStore(ENV)` instead." dir
+    return PassStore(ENV)
 end
 
 # Validates that the specified directory exists and is an initialized password store
