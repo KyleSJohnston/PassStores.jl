@@ -107,8 +107,8 @@ tempgpg() do
 
             withenv("PASSWORD_STORE_DIR" => passdir2) do
                 # Test that resolve_store_directory respects env var
-                resolved = PassStores.resolve_store_directory(missing)
-                @test resolved == passdir2
+                store = PassStore(missing)
+                @test store.dir == passdir2
             end
         end
     end
