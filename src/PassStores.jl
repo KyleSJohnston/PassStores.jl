@@ -31,7 +31,7 @@ A password store interface that provides dictionary-like access to the `pass` co
 - `dir`: The password store directory path.
 
 `dir` defaults to nothing, which implies the default store location (`~/.password-store`).
-Pass `ENV` to use the store location defined in PASSWORD_STORE_DIR, falling back to the
+Pass `ENV` to use the store location defined in `PASSWORD_STORE_DIR`, falling back to the
 default store location.
 
 For compatibility with v0.1.0, other non-AbstractString values are treated like `ENV` with
