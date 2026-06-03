@@ -4,7 +4,7 @@ using Logging
 
 export PassStore
 
-# Validates that the pass command is available and working
+"Validates that the pass command is available and working"
 function validate_pass_command()
     try
         run(pipeline(`pass --version`, stdout=devnull, stderr=devnull))
@@ -17,18 +17,25 @@ function validate_pass_command()
     end
 end
 
-# Returns the default password store directory path
+"Returns the default password store directory path"
 function default_store_directory()
     return joinpath(homedir(), ".password-store")
 end
 
 """
-    PassStore(dir=nothing)
+    PassStore(dir::Union{AbstractString,Nothing,Base.EnvDict}=nothing)
 
 A password store interface that provides dictionary-like access to the `pass` command-line password manager.
 
 # Arguments
-- `dir::Union{String,Nothing}`: The password store directory path. If `nothing`, uses the default store location (`~/.password-store`).
+- `dir`: The password store directory path.
+
+`dir` defaults to nothing, which implies the default store location (`~/.password-store`).
+Pass `ENV` to use the store location defined in PASSWORD_STORE_DIR, falling back to the
+default store location.
+
+For compatibility with v0.1.0, other non-AbstractString values are treated like `ENV` with
+a warning about deprecated behavior.
 
 # Examples
 ```julia
