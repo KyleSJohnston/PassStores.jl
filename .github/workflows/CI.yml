@@ -28,7 +28,7 @@ jobs:
       matrix:
         version:
           - '1.10'
-          - '1.10-nightly'
+          # - '1.10-nightly'  # 404 error as of 2026-07
           - '1.12'
           - '1.12-nightly'
           # - 'pre'
